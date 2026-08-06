@@ -15,7 +15,7 @@ Both variants define the **same operating model**, differing only in tool names 
 - **Mandatory workflow** — clarification → research (subagents write `docs/SubAgent/[NAME]/*_ANALYSIS.md`) → planning (`PLAN.md`) → explicit in-chat plan approval → implementation → final user confirmation. No implementation before plan approval.
 - **Parallel execution** — up to 3 parallel subagents per phase for research and implementation, coordinated via a shared `CHANGES.md` protocol and a Merge & Verify pass.
 - **MCP integrations:**
-  - **Athenaeum** — durable knowledge library for lessons, decisions, and dogfooding findings (queried at session start, updated at session end).
+  - **Athenaeum** — durable knowledge library for lessons, decisions, and project context (queried at session start, updated at session end); `docs/project/lessons.md` is the local fallback.
   - **jCodeMunch** — symbol-level code retrieval via tree-sitter indexing to cut token usage; native read/grep/glob only as fallback.
 - **Docs discipline** — every meaningful change requires a docs pass; rules live in exactly one owning doc; stale notes are deleted, not explained.
 - **Release & Git conventions** — Semantic Versioning, a release checklist (`VERSION.md`, `__version__`, `pyproject.toml`, tag, GitHub release), and Conventional Commits.

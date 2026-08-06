@@ -4,7 +4,7 @@
 >
 > **CRITICAL:** `docs/project/prime-directives.md` (if present) defines non-negotiable architectural and correctness rules that override all other guidance. `docs/project/project-definition.md` holds project information.
 >
-> **LEARNINGS** live in the Athenaeum library (see "Knowledge Library"); `docs/project/lessons.md` is the local fallback for dogfooding findings. Query both at session start.
+> **LEARNINGS** live in the Athenaeum library (see "Knowledge Library"); `docs/project/lessons.md` is the local fallback when the MCP is unavailable. Query both at session start.
 
 ## General Rules
 
@@ -19,20 +19,19 @@
 
 ## Knowledge Library (Athenaeum MCP)
 
-This project runs an Athenaeum instance as MCP server (`athenaeum` in `kilo.json`) — the durable knowledge store and primary dogfooding channel.
+This project runs an Athenaeum instance as MCP server (`athenaeum` in the Kimi Code MCP config, `mcp.json`) — the durable knowledge store.
 
 | Tool | Use it to |
 | ---- | --------- |
-| `request_knowledge` | Recall knowledge at session start and before non-trivial decisions; also orientation ("what is in the library?") — there is no browse tool. |
-| `store_knowledge` | Persist NEW durable knowledge: decisions, lessons, patterns, project context (`kind_hint: "lessons"`, `relates_to: ["athenaeum"]`). |
-| `update_knowledge` | Correct or modify EXISTING knowledge (free-text instruction; the librarian locates the target). |
-| `library_status` | Check library health — deterministic, no LLM. `library_curate` / `library_maintain` repair taxonomy and graph health. |
+| `mcp__athenaeum__request_knowledge` | Recall knowledge at session start and before non-trivial decisions; also orientation ("what is in the library?") — there is no browse tool. |
+| `mcp__athenaeum__store_knowledge` | Persist NEW durable knowledge: decisions, lessons, patterns, project context (`kind_hint: "lessons"`, `relates_to: ["athenaeum"]`). |
+| `mcp__athenaeum__update_knowledge` | Correct or modify EXISTING knowledge (free-text instruction; the librarian locates the target). |
+| `mcp__athenaeum__library_status` | Check library health — deterministic, no LLM. `mcp__athenaeum__library_curate` / `mcp__athenaeum__library_maintain` repair taxonomy and graph health. |
 
 Rules:
 
-- **Session start:** `request_knowledge` for task-relevant learnings AND read `docs/project/lessons.md` (dogfooding findings, bootstrap-critical notes).
-- **Session end:** persist learnings via `store_knowledge` (new) / `update_knowledge` (corrections). Append to `docs/project/lessons.md` ONLY dogfooding findings and bootstrap-critical notes.
-- **Anomalies:** surprising tool behavior (unclear descriptions, awkward result shapes, wrong librarian output) is dogfooding feedback — record it under "Dogfooding findings" in `docs/project/lessons.md`.
+- **Session start:** `mcp__athenaeum__request_knowledge` for task-relevant learnings AND read `docs/project/lessons.md` (local fallback notes).
+- **Session end:** persist learnings via `mcp__athenaeum__store_knowledge` (new) / `mcp__athenaeum__update_knowledge` (corrections); if the MCP is unavailable, append them to `docs/project/lessons.md` instead.
 
 ## Code Exploration (jCodeMunch MCP)
 

@@ -1,28 +1,27 @@
 # AGENTS
 
-Reusable **agent instruction files** (orchestrator prompts) for AI coding assistants. These are drop-in `AGENTS.md`-style system instructions — not application code. Copy the variant matching your coding agent into a project's root and adapt the `PROJECT-NAME` placeholder.
+Reusable **agent instruction file** (orchestrator prompt) for AI coding assistants. This is a drop-in `AGENTS.md`-style system instruction — not application code. Copy it into a project's root and let the agent adapt it during the mandatory first-session setup.
 
 ## Contents
 
 | File | Target agent | Notes |
 | ---- | ------------ | ----- |
-| `AGENTS_kimi-code.md` | [Kimi Code](https://github.com/MoonshotAI/kimi-cli) (CLI) | Uses the `Agent` / `AgentSwarm` tools and `AskUserQuestion` for clarification; subagents run as `subagent_type="coder"`; MCP tools are prefixed (`mcp__athenaeum__*`, `mcp__jcodemunch__*`). |
-| `AGENTS_kilo-code.md` | [Kilo Code](https://github.com/Kilo-Org/kilocode) | Same instruction set, adapted to Kilo's `task` tool with `subagent_type="general"`, the `question` tool, and unprefixed MCP tool names. |
+| `AGENTS_with_brain.md` | Agent-agnostic template | Self-adapting variant: on first contact the agent researches the repo, asks for mission and goals, creates a `brain/` directory of project context, and rewrites the placeholders itself. Uses MCP tools where configured (`athenaeum`, `jcodemunch`). |
 
-Both variants define the **same operating model**, differing only in tool names and agent vocabulary:
+## Operating model
 
-- **Orchestrator identity** — the agent you chat with is the single point of contact; it delegates research, planning, and implementation to subagents and supervises their work.
-- **Mandatory workflow** — clarification → research (subagents write `docs/SubAgent/[NAME]/*_ANALYSIS.md`) → planning (`PLAN.md`) → explicit in-chat plan approval → implementation → final user confirmation. No implementation before plan approval.
-- **Parallel execution** — up to 3 parallel subagents per phase for research and implementation, coordinated via a shared `CHANGES.md` protocol and a Merge & Verify pass.
+- **Self-setup on first contact** — a mandatory initial setup procedure: repo research via subagent, user interview for mission and goals, creation of the project brain, and in-place adaptation of every `[PLACEHOLDER]` and `<!-- setup: -->` comment.
+- **Project brain** — `brain/BRAIN.md` is the front door to session-spanning context: mission, goals, decisions with rationale, and a `roadmap.md` Kanban board (`Backlog` / `In Progress` / `Testing` / `Done` / `Idea Bank`) that only the user may move cards to `Done` on.
+- **Delegate by default** — the main session plans, decides, and reviews; exploration, research, bulk edits, and verification go to subagents with standalone prompts and compressed, evidence-backed reports.
 - **MCP integrations:**
-  - **Athenaeum** — durable knowledge library for lessons, decisions, and project context (queried at session start, updated at session end); `docs/project/lessons.md` is the local fallback.
-  - **jCodeMunch** — symbol-level code retrieval via tree-sitter indexing to cut token usage; native read/grep/glob only as fallback.
-- **Docs discipline** — every meaningful change requires a docs pass; rules live in exactly one owning doc; stale notes are deleted, not explained.
-- **Release & Git conventions** — Semantic Versioning, a release checklist (`VERSION.md`, `__version__`, `pyproject.toml`, tag, GitHub release), and Conventional Commits.
+  - **Athenaeum** — durable knowledge library for lessons and decisions that outlive the repo; recalled at session start, written only by the main session; the brain is the local fallback.
+  - **jCodeMunch** — symbol-level code retrieval via tree-sitter indexing to cut token usage; native read/grep/glob only as fallback and immediately before edits.
+- **Language discipline** — no emojis anywhere; code, comments, and commit messages always in English.
+- **Docs discipline** — every meaningful change requires a docs pass; each rule lives in exactly one owning doc; stale notes are deleted, not explained.
+- **Release & Git conventions** — Semantic Versioning, a release checklist (version carrier, tag, release notes, verification), Conventional Commits, and no commits unless the user asks.
 
 ## Usage
 
-1. Pick the file matching your coding agent.
-2. Copy it into the target project as `AGENTS.md` (or the agent's equivalent instructions file).
-3. Replace `**PROJECT-NAME**` with the actual project name.
-4. Ensure the referenced MCP servers (`athenaeum`, `jcodemunch`) are configured, or remove those sections if unused.
+1. Copy `AGENTS_with_brain.md` into the target project as `AGENTS.md` (or the agent's equivalent instructions file).
+2. Start a session with the kick-off prompt embedded in the file's setup section — the agent runs the initial setup and adapts the file to the repo.
+3. Ensure the referenced MCP servers (`athenaeum`, `jcodemunch`) are configured, or let setup remove those sections.

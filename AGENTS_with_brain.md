@@ -267,35 +267,6 @@ Rules of thumb:
 - When delegating, state this requirement explicitly in the subagent prompt — children do
   not inherit it automatically.
 
-## Vision and multimodal tasks
-
-Image input is **not guaranteed** by the active model. When a task requires looking at an
-image — a screenshot, a reference photo, a rendered frame, a sprite sheet, a design mockup —
-and the active model does not accept image input, **do not skip the task and do not guess
-from filenames**.
-
-Instead:
-
-1. **Detect the limitation early.** If an image read is rejected because the model does not
-   support image input, treat that as a signal to delegate, not as a failure to report.
-2. **Hand over everything as text.** The child cannot see this conversation. Include:
-   - absolute or workspace-relative **paths** to every image it must inspect,
-   - the exact question to answer about each image,
-   - the desired output shape (short structured report, checklist, JSON, diff proposal).
-3. **Ask for text back.** The child returns a written description, findings, or a proposed
-   change — never the image itself. Consume that text in the main session.
-4. **Route bulk visual work the same way.** Comparing many rendered frames, auditing a set of
-   assets for style-guide compliance, or extracting palettes from reference art are all
-   fan-out jobs: delegate them, one image or one asset per child.
-
-Rules of thumb:
-
-- Vision-capable subagent for **seeing**; main session for **deciding**.
-- State in the child's prompt that it must report uncertainty explicitly — never let it
-  invent detail it cannot actually see in the image.
-- If no vision-capable model is available, say so plainly and ask the human how to proceed
-  rather than producing speculative output.
-
 ## Project layout
 
 <!-- setup: Replace with the real roots discovered during repo research, and point each
